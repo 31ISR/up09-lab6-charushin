@@ -1,30 +1,43 @@
-<x-layout>
-    <link rel="stylesheet" href="style.css">
-    <div >
-        <a href="{{ route('todo.create') }}" >
-            New todo
+<x-app-layout>
+       <div class="container">
+        <a href="{{ route('todo.create') }}" class="new-todo-btn">
+            New Todo
         </a>
-        <div >
+                <a href="{{ route('note.create') }}" class="new-todo-btn">
+            New Note
+        </a>
+        <div class="todos-grid">
             @foreach ($todos as $todo)
-                <div >
-                    <div >
-                        {{ Str::words($todo->todo, 30) }}
+                <div class="todo-card {{ $todo->urgent ? 'urgent' : '' }} {{ $todo->done ? 'done' : '' }}">
+                    <div class="todo-content">
+                        <h3 class="todo-name">{{ $todo->name }}</h3>
+                        <div class="todo-status">
+                            @if($todo->urgent)
+                                <span class="status-badge urgent-badge">URGENT</span>
+                            @endif
+                            @if($todo->done)
+                                <span class="status-badge done-badge">DONE</span>
+                                @if($todo->date_completed)
+                                    <span class="completed-date">Completed: {{ $todo->date_completed->format('M d, Y H:i') }}</span>
+                                @endif
+                            @endif
+                        </div>
                     </div>
-                    <div >
-                        <a href="{{ route('todo.show', $todo) }}" >View</a>
-                        <a href="{{ route('todo.edit', $todo) }}" >Edit</a>
+                    <div class="todo-actions">
+                        <a href="{{ route('todo.show', $todo) }}" class="action-link">View</a>
+                        <a href="{{ route('todo.edit', $todo) }}" class="action-link">Edit</a>
                         <form action="{{ route('todo.destroy', $todo) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button >Delete</button>
+                            <button type="submit" class="delete-btn">Delete</button>
                         </form>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <div >
-            {{ $notes->links() }}
+        <div class="pagination">
+            {{ $todos->links() }}
         </div>
     </div>
-</x-layout>
+</x-app-layout>

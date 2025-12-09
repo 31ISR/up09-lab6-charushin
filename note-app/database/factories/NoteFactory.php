@@ -14,7 +14,7 @@ class NoteFactory extends Factory
      *
      * @return array<string, mixed>
      */
-        public function definition(): array
+    public function definition(): array
     {
         return [
             'note' => fake()->realText(2000),

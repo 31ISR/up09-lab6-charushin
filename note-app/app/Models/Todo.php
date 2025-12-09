@@ -13,12 +13,18 @@ class Todo extends Model
         'name', 
         'done', 
         'urgent', 
-        'date_completed',
+        'date_completed', 
+        'user_id'
     ];
     
     protected $casts = [
         'done' => 'boolean',
         'urgent' => 'boolean',
-        'date_completed' => 'datetime'
+        'date_completed' => 'datetime' 
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -1,30 +1,32 @@
-<x-layout>
-    <div >
-        <a href="{{ route('note.create') }}" >
+<x-app-layout>
+     <div class="container">
+        <a href="{{ route('note.create') }}" class="new-note-btn">
             New Note
         </a>
-        <link rel="stylesheet" href="style.css">
-        <div >
+                <a href="{{ route('todo.create') }}" class="new-note-btn">
+            New Todo
+        </a>
+        <div class="notes-grid">
             @foreach ($notes as $note)
-                <div >
-                    <div >
+                <div class="note-card">
+                    <div class="note-content">
                         {{ Str::words($note->note, 30) }}
                     </div>
-                    <div >
-                        <a href="{{ route('note.show', $note) }}" >View</a>
-                        <a href="{{ route('note.edit', $note) }}" >Edit</a>
+                    <div class="note-actions">
+                        <a href="{{ route('note.show', $note) }}" class="action-link">View</a>
+                        <a href="{{ route('note.edit', $note) }}" class="action-link">Edit</a>
                         <form action="{{ route('note.destroy', $note) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button >Delete</button>
+                            <button type="submit" class="delete-btn">Delete</button>
                         </form>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <div >
+        <div class="pagination">
             {{ $notes->links() }}
         </div>
     </div>
-</x-layout>
+</x-app-layout>

@@ -12,7 +12,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        return view('note.index');
+        $todos = Todo::query()->orderBy('created_at', 'desc')->paginate();
+        return view('todo.index', ['todos' => $todos]);
     }
 
     /**
@@ -20,7 +21,7 @@ class TodoController extends Controller
      */
     public function create()
     {
-        return view('note.create');
+        return view('todo.create');
     }
 
     /**
@@ -28,7 +29,16 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        return 'store';
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:75'],
+            'urgent' => ['boolean'],
+            'done' => ['boolean']
+        ]);
+
+        $data['user_id'] = 1;
+        $todo = Todo::create($data);
+
+        return to_route('todo.index', $todo)->with('message', 'Todo was created');
     }
 
     /**
@@ -36,7 +46,7 @@ class TodoController extends Controller
      */
     public function show(Todo $todo)
     {
-        return view('note.show');
+        return view('todo.show', ['todo' => $todo]);
     }
 
     /**
@@ -44,7 +54,7 @@ class TodoController extends Controller
      */
     public function edit(Todo $todo)
     {
-        return view('note.edit');
+        return view('todo.edit', ['todo' => $todo]);
     }
 
     /**
@@ -52,7 +62,19 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
-        return 'update';
+        // if ($todo->user_id !== request()->user()->id) {
+        //     abort(403);
+        // }
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:75'],
+            'urgent' => ['boolean'],
+            'done' => ['boolean'],
+            'date_completed' => ['nullable', 'date']
+        ]);
+
+        $todo->update($data);
+
+        return to_route('todo.index', $todo)->with('message', 'Todo was updated');
     }
 
     /**
@@ -60,6 +82,11 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        return 'note.destroy';
+        // if ($todo->user_id !== request()->user()->id) {
+        //     abort(403);
+        // }
+        $todo->delete();
+
+        return to_route('todo.index')->with('message', 'Todo was deleted');
     }
 }

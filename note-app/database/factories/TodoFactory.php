@@ -4,23 +4,16 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Todo>
- */
 class TodoFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
-     {
-         return [
-             'name'=> fake()->realText(75),
-             'done' => 1,
-             'urgent' => 0,
-             'dateCompleted' => fake()->dateTime('now'),
-         ];
-     }
+    {
+        return [
+            'name' => $this->faker->realText(75),
+            'done' => $this->faker->boolean(20), 
+            'urgent' => $this->faker->boolean(30), 
+            'date_completed' => $this->faker->optional(0.2)->dateTime('now'), 
+            'user_id' => \App\Models\User::factory() 
+        ];
+    }
 }
